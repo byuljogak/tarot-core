@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TarotController } from 'src/controllers/tarot.controller';
 import { OpenAIModule } from './openai.module';
-import { TodayTarotService } from 'src/services/today_tarot.service';
-import { RomanceTarotService } from 'src/services/romance_tarot.service';
-import { MonthlyStudyTarotService } from 'src/services/monthly_study_tarot.service';
+import { TodayTarotService } from 'src/services/tarot/today_tarot.service';
+import { RomanceTarotService } from 'src/services/tarot/romance_tarot.service';
+import { MonthlyStudyTarotService } from 'src/services/tarot/monthly_study_tarot.service';
 
 @Module({
   imports: [OpenAIModule],
