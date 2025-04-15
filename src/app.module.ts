@@ -7,6 +7,7 @@ import { Config } from './schemas/config.schema';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
 import { TarotModule } from './modules/tarot.module';
+import { DevController } from './dev.controller';
 
 @Module({
   imports: [
@@ -16,8 +17,9 @@ import { TarotModule } from './modules/tarot.module';
     }),
     JwtModule.registerAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService<Config, true>) => ({
-        secret: configService.get<Config['jwt']>('jwt').secret,
+      useFactory: (config: ConfigService<Config, true>) => ({
+        secret: config.get<Config['auth']>('auth').gatewayJwtSecret,
+        global: true,
       }),
       global: true,
     }),
@@ -29,6 +31,6 @@ import { TarotModule } from './modules/tarot.module';
       useClass: AuthGuard,
     },
   ],
-  controllers: [AppController],
+  controllers: [AppController, DevController],
 })
 export class AppModule {}
