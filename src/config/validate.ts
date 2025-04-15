@@ -14,8 +14,9 @@ export function validate(raw: Record<string, unknown>) {
         monthly_study: raw.OPENAI_SYSTEM_MESSAGE_MONTHLY_STUDY as string,
       },
     },
-    jwt: {
-      secret: raw.JWT_SECRET as string,
+    auth: {
+      gatewayJwtHeader: raw.GATEWAY_JWT_HEADER as string,
+      gatewayJwtSecret: raw.GATEWAY_JWT_SECRET as string,
     },
   };
 
