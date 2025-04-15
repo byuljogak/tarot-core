@@ -1,11 +1,24 @@
 import { Body, Controller, HttpCode, Post, Req } from '@nestjs/common';
+import { Roles } from 'src/decorators/role.decorator';
+import { ResponseData } from 'src/interfaces/response.interface';
 import { UserRequest } from 'src/interfaces/user_request.interface';
-import { MonthlyStudyRequest } from 'src/schemas/service/monthly_study.schema';
-import { RomanceRequest } from 'src/schemas/service/romance.schema';
-import { TodayRequest } from 'src/schemas/service/today.schema';
-import { MonthlyStudyTarotService } from 'src/services/monthly_study_tarot.service';
-import { RomanceTarotService } from 'src/services/romance_tarot.service';
-import { TodayTarotService } from 'src/services/today_tarot.service';
+import { ZodValidationPipe } from 'src/pipes/zod_validation.pipe';
+import { RoleEnum } from 'src/schemas/role.schema';
+import {
+  MonthlyStudyRequest,
+  monthlyStudyRequestSchema,
+} from 'src/schemas/service/monthly_study.schema';
+import {
+  RomanceRequest,
+  romanceRequestSchema,
+} from 'src/schemas/service/romance.schema';
+import {
+  TodayRequest,
+  todayRequestSchema,
+} from 'src/schemas/service/today.schema';
+import { MonthlyStudyTarotService } from 'src/services/tarot/monthly_study_tarot.service';
+import { RomanceTarotService } from 'src/services/tarot/romance_tarot.service';
+import { TodayTarotService } from 'src/services/tarot/today_tarot.service';
 
 @Controller('tarot')
 export class TarotController {
@@ -16,30 +29,60 @@ export class TarotController {
   ) {}
 
   @Post('today')
+  @Roles([RoleEnum.USER, RoleEnum.ADMIN])
   @HttpCode(200)
   async getTodayTarotMessage(
-    @Body() data: TodayRequest,
-    @Req() req: UserRequest,
-  ) {
+    @Body(new ZodValidationPipe(todayRequestSchema)) data: TodayRequest,
+  ): Promise<
+    ResponseData<{
+      description: string;
+    }>
+  > {
     const result = await this.todayTarotService.getTodayTarotMessage(data);
-    return result;
+    return {
+      message: 'success',
+      data: result,
+    };
   }
 
   @Post('romance')
+  @Roles([RoleEnum.USER, RoleEnum.ADMIN])
+  @HttpCode(200)
   @HttpCode(200)
   async getRomanceTarotMessage(
-    @Body() data: RomanceRequest,
-    @Req() req: UserRequest,
-  ) {
-    return this.romanceTarotService.getRomanceTarotMessage(data);
+    @Body(new ZodValidationPipe(romanceRequestSchema)) data: RomanceRequest,
+  ): Promise<
+    ResponseData<{
+      description: string;
+    }>
+  > {
+    const result = await this.romanceTarotService.getRomanceTarotMessage(data);
+    return {
+      message: 'success',
+      data: result,
+    };
   }
 
   @Post('monthly-study')
+  @Roles([RoleEnum.USER, RoleEnum.ADMIN])
+  @HttpCode(200)
   @HttpCode(200)
   async getMonthlyStudyTarotMessage(
-    @Body() data: MonthlyStudyRequest,
-    @Req() req: UserRequest,
-  ) {
-    return this.monthlyStudyTarotService.getMonthlyStudyTarotMessage(data);
+    @Body(new ZodValidationPipe(monthlyStudyRequestSchema))
+    data: MonthlyStudyRequest,
+  ): Promise<
+    ResponseData<{
+      currentState: string;
+      obstacle: string;
+      advice: string;
+      summary: string;
+    }>
+  > {
+    const result =
+      await this.monthlyStudyTarotService.getMonthlyStudyTarotMessage(data);
+    return {
+      message: 'success',
+      data: result,
+    };
   }
 }
