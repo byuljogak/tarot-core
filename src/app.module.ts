@@ -4,10 +4,9 @@ import { validate } from './config/validate';
 import { AppController } from './app.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { Config } from './schemas/config.schema';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './guards/auth.guard';
-import { TarotModule } from './modules/tarot.module';
+import { TarotModule } from './modules/tarot/tarot.module';
 import { DevController } from './dev.controller';
+import { AuthModule } from './modules/auth.module';
 
 @Module({
   imports: [
@@ -24,12 +23,7 @@ import { DevController } from './dev.controller';
       global: true,
     }),
     TarotModule,
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
+    AuthModule,
   ],
   controllers: [AppController, DevController],
 })

@@ -1,7 +1,6 @@
-import { Body, Controller, HttpCode, Post, Req } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { Roles } from 'src/decorators/role.decorator';
 import { ResponseData } from 'src/interfaces/response.interface';
-import { UserRequest } from 'src/interfaces/user_request.interface';
 import { ZodValidationPipe } from 'src/pipes/zod_validation.pipe';
 import { RoleEnum } from 'src/schemas/role.schema';
 import {
