@@ -37,7 +37,7 @@ export class TarotController {
       description: string;
     }>
   > {
-    const result = await this.todayTarotService.getTodayTarotMessage(data);
+    const result = await this.todayTarotService.readTarot(data);
     return {
       message: 'success',
       data: result,
@@ -55,7 +55,7 @@ export class TarotController {
       description: string;
     }>
   > {
-    const result = await this.romanceTarotService.getRomanceTarotMessage(data);
+    const result = await this.romanceTarotService.readTarot(data);
     return {
       message: 'success',
       data: result,
@@ -77,8 +77,7 @@ export class TarotController {
       summary: string;
     }>
   > {
-    const result =
-      await this.monthlyStudyTarotService.getMonthlyStudyTarotMessage(data);
+    const result = await this.monthlyStudyTarotService.readTarot(data);
     return {
       message: 'success',
       data: result,
