@@ -4,7 +4,7 @@ import { validate } from './config/validate';
 import { AppController } from './app.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { Config } from './schemas/config.schema';
-import { TarotModule } from './modules/tarot/tarot.module';
+import { TarotModule } from './modules/tarot.module';
 import { DevController } from './dev.controller';
 import { AuthModule } from './modules/auth.module';
 

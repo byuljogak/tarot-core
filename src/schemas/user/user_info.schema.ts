@@ -19,7 +19,7 @@ export type JobStatus = z.infer<typeof jobStatusSchema>;
 
 export const userInfoSchema = z.object({
   gender: genderSchema,
-  brithDateTime: z.string(),
+  brithDateTime: z.string().datetime(),
   datingStatus: datingStatusSchema,
   jobStatus: jobStatusSchema,
 });
