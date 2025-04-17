@@ -14,8 +14,29 @@ datasource db {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  uuid          String          @unique
+  id               Int                @id @default(autoincrement())
+  uuid             String             @unique
+  LastTarotReading LastTarotReading[]
 
   @@map("users")
+}
+
+model LastTarotReading {
+  id        Int       @id @default(autoincrement())
+  version   Float     @default(1.0)
+  type      TarotType
+  data      Json      @db.JsonB
+  userId    Int       @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@unique([userId, type])
+  @@map("last_tarot_readings")
+}
+
+enum TarotType {
+  MONTHLY_STUDY
+  ROMMANCE
+  TODAY
 }
