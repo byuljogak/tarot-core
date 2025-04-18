@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  uuid        String        @unique
+  LatestTarot LatestTarot[]
+
+  @@map("users")
+}
+
+model LatestTarot {
+  id        Int       @id @default(autoincrement())
+  version   Float     @default(1.0)
+  type      TarotType
+  data      Json      @db.JsonB
+  userId    Int       @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@unique([userId, type])
+  @@map("latest_tarot")
+}
+
+enum TarotType {
+  MONTHLY_STUDY
+  ROMMANCE
+  TODAY
+}

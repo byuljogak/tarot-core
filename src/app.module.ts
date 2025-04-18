@@ -4,9 +4,10 @@ import { validate } from './config/validate';
 import { AppController } from './app.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { Config } from './schemas/config.schema';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './guards/auth.guard';
 import { TarotModule } from './modules/tarot.module';
+import { DevController } from './dev.controller';
+import { AuthModule } from './modules/auth.module';
+import { UserModule } from './modules/user.module';
 
 @Module({
   imports: [
@@ -16,19 +17,16 @@ import { TarotModule } from './modules/tarot.module';
     }),
     JwtModule.registerAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService<Config, true>) => ({
-        secret: configService.get<Config['jwt']>('jwt').secret,
+      useFactory: (config: ConfigService<Config, true>) => ({
+        secret: config.get<Config['auth']>('auth').gatewayJwtSecret,
+        global: true,
       }),
       global: true,
     }),
     TarotModule,
+    UserModule,
+    AuthModule,
   ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-  ],
-  controllers: [AppController],
+  controllers: [AppController, DevController],
 })
 export class AppModule {}
