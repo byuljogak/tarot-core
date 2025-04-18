@@ -7,6 +7,7 @@ import { Config } from './schemas/config.schema';
 import { TarotModule } from './modules/tarot.module';
 import { DevController } from './dev.controller';
 import { AuthModule } from './modules/auth.module';
+import { UserModule } from './modules/user.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthModule } from './modules/auth.module';
       global: true,
     }),
     TarotModule,
+    UserModule,
     AuthModule,
   ],
   controllers: [AppController, DevController],

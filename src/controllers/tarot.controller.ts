@@ -19,7 +19,7 @@ import { MonthlyStudyTarotService } from 'src/services/tarot/monthly_study_tarot
 import { RomanceTarotService } from 'src/services/tarot/romance_tarot.service';
 import { TodayTarotService } from 'src/services/tarot/today_tarot.service';
 
-@Controller('tarot')
+@Controller('read')
 export class TarotController {
   constructor(
     private readonly todayTarotService: TodayTarotService,
@@ -47,7 +47,6 @@ export class TarotController {
   @Post('romance')
   @Roles([RoleEnum.USER, RoleEnum.ADMIN])
   @HttpCode(200)
-  @HttpCode(200)
   async getRomanceTarotMessage(
     @Body(new ZodValidationPipe(romanceRequestSchema)) data: RomanceRequest,
   ): Promise<
@@ -64,7 +63,6 @@ export class TarotController {
 
   @Post('monthly-study')
   @Roles([RoleEnum.USER, RoleEnum.ADMIN])
-  @HttpCode(200)
   @HttpCode(200)
   async getMonthlyStudyTarotMessage(
     @Body(new ZodValidationPipe(monthlyStudyRequestSchema))

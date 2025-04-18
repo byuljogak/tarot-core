@@ -14,14 +14,14 @@ datasource db {
 }
 
 model User {
-  id               Int                @id @default(autoincrement())
-  uuid             String             @unique
-  LastTarotReading LastTarotReading[]
+  id          Int           @id @default(autoincrement())
+  uuid        String        @unique
+  LatestTarot LatestTarot[]
 
   @@map("users")
 }
 
-model LastTarotReading {
+model LatestTarot {
   id        Int       @id @default(autoincrement())
   version   Float     @default(1.0)
   type      TarotType
@@ -32,7 +32,7 @@ model LastTarotReading {
   updatedAt DateTime  @updatedAt @map("updated_at")
 
   @@unique([userId, type])
-  @@map("last_tarot_readings")
+  @@map("latest_tarot")
 }
 
 enum TarotType {

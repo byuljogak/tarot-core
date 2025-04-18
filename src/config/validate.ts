@@ -44,8 +44,8 @@ export function validate(raw: Record<string, unknown>) {
       },
     },
     auth: {
-      gatewayJwtHeader: raw.GATEWAY_JWT_HEADER as string,
-      gatewayJwtSecret: raw.GATEWAY_JWT_SECRET as string,
+      gatewayJwtHeader: raw.AUTH_GATEWAY_JWT_HEADER as string,
+      gatewayJwtSecret: raw.AUTH_GATEWAY_JWT_SECRET as string,
     },
   };
 

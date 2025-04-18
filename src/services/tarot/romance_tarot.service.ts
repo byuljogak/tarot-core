@@ -10,7 +10,7 @@ import {
   romanceOpenAIResponseSchema,
 } from 'src/schemas/service/romance.schema';
 import { PrismaService } from '../prisma.service';
-import { LastTarotReading, TarotType } from '@prisma/client';
+import { LatestTarot, TarotType } from '@prisma/client';
 
 @Injectable()
 export class RomanceTarotService {
@@ -29,7 +29,7 @@ export class RomanceTarotService {
   async getExistingData(
     userUuid: string,
   ): Promise<RomanceOpenAIResponse | null> {
-    const lastData = await this.prisma.lastTarotReading.findFirst({
+    const lastData = await this.prisma.latestTarot.findFirst({
       where: {
         user: {
           uuid: userUuid,
@@ -73,7 +73,7 @@ export class RomanceTarotService {
   async saveData(data: {
     result: RomanceOpenAIResponse;
     userUuid: string;
-  }): Promise<LastTarotReading> {
+  }): Promise<LatestTarot> {
     const user = await this.prisma.user.findUnique({
       where: {
         uuid: data.userUuid,
@@ -82,7 +82,7 @@ export class RomanceTarotService {
     if (!user) {
       throw new InternalServerErrorException('User not found');
     }
-    return this.prisma.lastTarotReading.upsert({
+    return this.prisma.latestTarot.upsert({
       where: {
         userId_type: {
           userId: user.id,
