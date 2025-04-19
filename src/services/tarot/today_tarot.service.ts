@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { OpenAIService } from '../openai.service';
 import {
   TodayOpenAIRequest,
@@ -22,12 +22,12 @@ export class TodayTarotService {
    * @returns TodayOpenAIRequest | null
    */
   async getExistingData(userUuid: string): Promise<TodayOpenAIRequest | null> {
-    const lastData = await this.prisma.latestTarot.findFirst({
+    const lastData = await this.prisma.latestTarot.findUnique({
       where: {
-        user: {
-          uuid: userUuid,
+        userUuid_type: {
+          userUuid,
+          type: TarotType.TODAY,
         },
-        type: 'TODAY',
         version: TodayTarotService.version,
         updatedAt: {
           gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
@@ -58,27 +58,15 @@ export class TodayTarotService {
     result: TodayOpenAIResponse;
     userUuid: string;
   }): Promise<LatestTarot> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        uuid: data.userUuid,
-      },
-    });
-    if (!user) {
-      throw new InternalServerErrorException('User not found');
-    }
     return this.prisma.latestTarot.upsert({
       where: {
-        userId_type: {
-          userId: user.id,
+        userUuid_type: {
+          userUuid: data.userUuid,
           type: TarotType.TODAY,
         },
       },
       create: {
-        user: {
-          connect: {
-            uuid: data.userUuid,
-          },
-        },
+        userUuid: data.userUuid,
         type: TarotType.TODAY,
         version: TodayTarotService.version,
         data: data.result,

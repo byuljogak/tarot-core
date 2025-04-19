@@ -29,12 +29,12 @@ export class RomanceTarotService {
   async getExistingData(
     userUuid: string,
   ): Promise<RomanceOpenAIResponse | null> {
-    const lastData = await this.prisma.latestTarot.findFirst({
+    const lastData = await this.prisma.latestTarot.findUnique({
       where: {
-        user: {
-          uuid: userUuid,
+        userUuid_type: {
+          userUuid,
+          type: TarotType.ROMMANCE,
         },
-        type: TarotType.ROMMANCE,
         version: RomanceTarotService.version,
         updatedAt: {
           gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
@@ -74,23 +74,15 @@ export class RomanceTarotService {
     result: RomanceOpenAIResponse;
     userUuid: string;
   }): Promise<LatestTarot> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        uuid: data.userUuid,
-      },
-    });
-    if (!user) {
-      throw new InternalServerErrorException('User not found');
-    }
     return this.prisma.latestTarot.upsert({
       where: {
-        userId_type: {
-          userId: user.id,
+        userUuid_type: {
+          userUuid: data.userUuid,
           type: TarotType.ROMMANCE,
         },
       },
       create: {
-        userId: user.id,
+        userUuid: data.userUuid,
         type: TarotType.ROMMANCE,
         version: RomanceTarotService.version,
         data: data.result,
