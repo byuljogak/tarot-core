@@ -83,20 +83,6 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    // Check if the user exists in the database
-    const user = await this.prisma.user.findUnique({
-      where: {
-        uuid: parsedTokenPayload.data.uuid,
-      },
-    });
-    if (!user) {
-      await this.prisma.user.create({
-        data: {
-          uuid: parsedTokenPayload.data.uuid,
-        },
-      });
-    }
-
     // Set the user object to the request object
     request.user = {
       uuid: parsedTokenPayload.data.uuid,

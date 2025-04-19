@@ -13,25 +13,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id          Int           @id @default(autoincrement())
-  uuid        String        @unique
-  LatestTarot LatestTarot[]
-
-  @@map("users")
-}
-
 model LatestTarot {
   id        Int       @id @default(autoincrement())
+  uuid      String    @unique @default(uuid())
+  userUuid  String    @map("user_uuid")
   version   Float     @default(1.0)
   type      TarotType
   data      Json      @db.JsonB
-  userId    Int       @map("user_id")
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
 
-  @@unique([userId, type])
+  @@unique([userUuid, type])
   @@map("latest_tarot")
 }
 
